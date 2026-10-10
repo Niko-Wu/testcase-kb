@@ -1,5 +1,8 @@
 # testcase-kb — 本地测试用例知识库（Claude Code 插件）
 
+[![CI](https://github.com/Niko-Wu/testcase-kb/actions/workflows/ci.yml/badge.svg)](https://github.com/Niko-Wu/testcase-kb/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+
 [English](./README.en.md) | 中文
 
 **是什么**：一个装进 Claude Code 的测试用例知识库。你对 Claude 说一句话，它写出可执行的 e2e 用例；引擎执行后，浏览器里看进度、截图、断言三态——数据全部留在你本机。

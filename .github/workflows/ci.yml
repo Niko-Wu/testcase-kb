@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: 安装依赖
+        run: pnpm install --frozen-lockfile
+
+      - name: 初始化数据目录（含 Chromium 自举）
+        run: node scripts/kb-init.mjs
+        env:
+          KB_ROOT: /tmp/testcase-kb
+
+      - name: 校验用例
+        run: node scripts/kb.mjs validate
+        env:
+          KB_ROOT: /tmp/testcase-kb
+
+      - name: 构建站点
+        run: pnpm build

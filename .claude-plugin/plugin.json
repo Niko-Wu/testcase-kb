@@ -1,6 +1,6 @@
 {
   "name": "testcase-kb",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "本地测试用例知识库：Claude 写用例、引擎执行、站点可视化（数据纯本地私有，内置三态示例）",
   "author": {
     "name": "niko"
