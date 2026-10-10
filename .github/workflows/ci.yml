@@ -35,3 +35,5 @@ jobs:
 
       - name: 构建站点
         run: pnpm build
+        env:
+          KB_ROOT: /tmp/testcase-kb
