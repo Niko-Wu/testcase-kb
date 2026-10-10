@@ -1,0 +1,8 @@
+# 测试账号凭据模板 — 复制为 accounts.yaml 并填入真实值（accounts.yaml 已 gitignore，严禁提交）
+# 分发渠道：密码管家 / 团队私下，不进 git、不进 wiki
+accounts:
+  # iot 外部测试账号（下单买家身份等）
+  # iot-buyer:
+  #   username: xxx@example.com
+  #   password: xxx
+  #   note: daily 环境测试买家

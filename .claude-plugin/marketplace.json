@@ -1,0 +1,11 @@
+{
+  "name": "testcase-kb",
+  "owner": { "name": "niko" },
+  "plugins": [
+    {
+      "name": "testcase-kb",
+      "source": "./",
+      "description": "本地测试用例知识库：Claude 写用例、引擎执行、站点可视化"
+    }
+  ]
+}

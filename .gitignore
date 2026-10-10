@@ -1,0 +1,11 @@
+node_modules/
+.vitepress/dist/
+.vitepress/cache/
+.DS_Store
+*.log
+.vitepress/gen-data.lock
+.auth/
+.artifacts/
+.kb-run.lock
+.kb-memory.json
+site-dist/

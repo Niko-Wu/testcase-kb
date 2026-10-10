@@ -1,0 +1,29 @@
+{
+  "name": "testcase-kb",
+  "version": "0.1.0",
+  "private": true,
+  "description": "本地测试用例知识库 Claude Code 插件：Claude 写用例、引擎执行、站点可视化（数据纯本地私有）",
+  "scripts": {
+    "kb:init": "node scripts/kb-init.mjs",
+    "kb:server": "node scripts/kb-server.mjs",
+    "kb": "node scripts/kb.mjs",
+    "auth": "node scripts/kb-auth.mjs",
+    "record": "node scripts/kb-record.mjs",
+    "run:case": "node scripts/kb-run.mjs case",
+    "run:ids": "node scripts/kb-run.mjs ids",
+    "run:domain": "node scripts/kb-run.mjs domain",
+    "run:smoke": "node scripts/kb-run.mjs smoke",
+    "build": "vitepress build ."
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.0",
+    "@types/markdown-it": "^14.2.0",
+    "js-yaml": "^4.1.0",
+    "markdown-it": "^15.0.2",
+    "vitepress": "^1.6.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Niko-Wu/testcase-kb.git"
+  }
+}

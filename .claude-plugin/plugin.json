@@ -1,0 +1,15 @@
+{
+  "name": "testcase-kb",
+  "version": "0.1.0",
+  "description": "本地测试用例知识库：Claude 写用例、引擎执行、站点可视化（数据纯本地私有，内置三态示例）",
+  "author": {
+    "name": "niko"
+  },
+  "keywords": [
+    "test",
+    "e2e",
+    "playwright",
+    "knowledge-base",
+    "local-first"
+  ]
+}

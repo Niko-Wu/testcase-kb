@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>demo 搜索（知识库示例站点）</title>
+<style>
+  body{font:15px/1.8 -apple-system,'PingFang SC',sans-serif;color:#33424c;max-width:720px;margin:40px auto;padding:0 20px}
+  h1{font-size:20px;color:#1c2b33}
+  .search{display:flex;gap:8px;margin:24px 0}
+  #kw{flex:1;padding:9px 14px;border:1px solid #d8e2e4;border-radius:8px;font-size:15px}
+  #su{padding:9px 22px;border:0;border-radius:8px;background:#0e7490;color:#fff;font-size:15px;cursor:pointer}
+  #su:disabled{opacity:.5;cursor:wait}
+  #content_left{list-style:none;padding:0}
+  #content_left li{border:1px solid #d8e2e4;border-radius:10px;padding:14px 18px;margin:10px 0}
+  .t{font-weight:600;color:#1c2b33}
+  .d{color:#64748b;font-size:13px;margin-top:4px}
+  .empty{color:#94a3b8;text-align:center;padding:32px 0}
+  #content_left li{cursor:pointer;transition:border-color .15s}
+  #content_left li:hover{border-color:#0e7490}
+  #detail{display:none;margin-top:18px;border:1px solid #0e7490;border-radius:12px;padding:18px 22px;background:rgba(14,116,144,.04)}
+  #detail h3{margin:0 0 8px;color:#0e7490}
+  #detail .row{display:flex;justify-content:space-between;padding:4px 0;color:#33424c}
+  #detail .row b{color:#1c2b33}
+</style>
+</head>
+<body>
+<h1>demo 搜索</h1>
+<p class="d">知识库自带示例站点（本地静态、无外部依赖）——示例用例打这里，永远稳定；结构对齐真实搜索页（#kw / #su / #content_left）。</p>
+<div class="search">
+  <input id="kw" placeholder="输入关键词，回车或点按钮" autocomplete="off">
+  <button id="su">搜索一下</button>
+</div>
+<ul id="content_left"><li class="empty">输入关键词开始搜索</li></ul>
+<div id="detail"></div>
+<script>
+// 300ms 模拟异步——顺带演示 e2e 的元素等待（不 sleep、等渲染）
+const DATA = {
+  default: Array.from({length: 8}, (_, i) => ({ t: `示例结果 ${i+1} — 「${localStorage.__kw || ''}」`, d: `这是 demo 站的第 ${i+1} 条结果，内容稳定可断言。` })),
+  weather: [
+    { t: '天气预报 - 今日 22℃ 多云转晴', d: '示例城市今日天气：白天多云，夜间晴，22℃ ~ 15℃，东风 3 级。' },
+    { t: '天气预报 - 明日 24℃ 晴', d: '明日晴间多云，24℃ ~ 16℃，适宜出行。' },
+    { t: '15 天天气预报趋势', d: '未来两周温度平稳，周末有一次弱降水过程。' },
+    { t: '空气质量指数 AQI 42 优', d: '示例城市空气质量优，无首要污染物。' },
+    { t: '生活指数：穿衣/洗车/紫外线', d: '穿衣舒适，洗车适宜，紫外线中等。' },
+  ],
+}
+function doSearch() {
+  const kw = document.querySelector('#kw').value.trim()
+  const btn = document.querySelector('#su')
+  btn.disabled = true
+  setTimeout(() => {
+    const ul = document.querySelector('#content_left')
+    if (!kw) { ul.innerHTML = '<li class="empty">输入关键词开始搜索</li>'; btn.disabled = false; return }
+    const key = /天气|weather/i.test(kw) ? 'weather' : 'default'
+    localStorage.__kw = kw
+    ul.innerHTML = DATA[key].map((r) => `<li><div class="t">${r.t}</div><div class="d">${r.d}</div></li>`).join('')
+    btn.disabled = false
+  }, 300)
+}
+// 点击结果项查看详情（第二视图——示例用例的第二张截图锚点）
+document.querySelector('#content_left').addEventListener('click', (e) => {
+  const li = e.target.closest('li')
+  if (!li || li.classList.contains('empty')) return
+  const detail = document.querySelector('#detail')
+  detail.style.display = 'block'
+  detail.innerHTML = '<h3>详情 — ' + li.querySelector('.t').textContent + '</h3>'
+    + '<div class="row"><span>当前温度</span><b>22℃</b></div>'
+    + '<div class="row"><span>今日范围</span><b>15℃ ~ 22℃</b></div>'
+    + '<div class="row"><span>风力</span><b>东风 3 级</b></div>'
+    + '<div class="row"><span>更新时间</span><b>刚刚</b></div>'
+})
+document.querySelector('#su').addEventListener('click', doSearch)
+document.querySelector('#kw').addEventListener('keydown', (e) => { if (e.key === 'Enter') doSearch() })
+</script>
+</body>
+</html>
