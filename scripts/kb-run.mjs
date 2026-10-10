@@ -96,6 +96,28 @@ function acquireLock() {
   process.on('exit', () => { try { rmSync(LOCK, { force: true }) } catch {} })
 }
 
+// kb-server 自动拉起：目标是本机但端口没监听 → detached 启动并等就绪（用户跑用例无需先手动起 server）
+async function ensureServer(baseUrl) {
+  const u = new URL(baseUrl)
+  if (!['127.0.0.1', 'localhost'].includes(u.hostname)) return // 远程环境不归我们管
+  const port = u.port || (u.protocol === 'https:' ? 443 : 80)
+  const base = `http://${u.hostname}:${port}`
+  const up = async () => { try { return (await fetch(base, { signal: AbortSignal.timeout(1500) })).status < 500 } catch { return false } }
+  if (await up()) return
+  console.log(`[引擎] kb-server（${base}）未启动，自动拉起中…`)
+  const child = spawn(process.execPath, [join(PLUGIN_ROOT, 'scripts/kb-server.mjs'), '--port', String(port)], {
+    detached: true, stdio: 'ignore', env: { ...process.env, KB_PORT: String(port) },
+  })
+  child.unref()
+  const deadline = Date.now() + 150_000 // 首启含站点构建约 1-2 分钟，产物的 listen 秒级
+  while (Date.now() < deadline) {
+    if (await up()) { console.log(`[引擎] kb-server 已就绪: ${base}`); return }
+    await new Promise((r) => setTimeout(r, 1000))
+  }
+  console.error(`[引擎] kb-server 拉起超时（${base}），请手动执行: node ${join(PLUGIN_ROOT, 'scripts/kb-server.mjs')} --port ${port}`)
+  process.exit(1)
+}
+
 export async function run(mode, arg) {
   acquireLock()
   const cases = pickCases(mode, arg)
@@ -113,6 +135,7 @@ export async function run(mode, arg) {
   // 项目环境标签的请求头名：域配置 tagHeader（domains/<域>/_config.yaml）优先，默认 envtag（各团队 key 可不同）
   const tagHeader = String(cases[0]?.tagHeader || 'envtag')
   console.log(`[引擎] 目标环境: ${BASE_URL}${process.env.ENV_TAG ? ' (' + tagHeader + ' ' + process.env.ENV_TAG + ')' : ''}`)
+  await ensureServer(BASE_URL) // demo 等本机环境：server 没起先拉起（端口取自 BASE_URL）
   // 环境显示名：画像 envs 反查短名（daily/pre...，与站点执行下拉一致）；自定义 URL 无匹配退 hostname
   const envKey = String(Object.entries(cfg?.envs || {}).find(([, v]) => String(v).replace(/\/$/, '') === BASE_URL)?.[0] || new URL(BASE_URL).hostname)
   const envLabel = `${envKey}${process.env.ENV_TAG ? ' · ' + process.env.ENV_TAG : ''}`

@@ -70,8 +70,8 @@ CLI 等价（`KB_ROOT` 默认 `~/.testcase-kb`）：
 
 ```bash
 pnpm kb:init                 # 播种/修复数据目录
-pnpm kb:server               # 站点（--port 4570）
-pnpm run:case TC-DEMO-001   # 单条（demo 用例需 kb:server 在线——demo 站挂在 server 上）
+pnpm kb:server               # 站点（--port 4570；kb-run 打本机环境会自动拉起，一般不用手动跑）
+pnpm run:case TC-DEMO-001   # 单条（demo 环境挂在本机 server，端口取自画像 envs，kb-run 自动确保在线）
 pnpm run:domain web-search   # 整域
 pnpm auth import <host>      # 私有站点导登录态（从你的浏览器）
 pnpm record <url>            # Playwright codegen 录制
